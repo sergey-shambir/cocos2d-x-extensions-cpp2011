@@ -5,7 +5,7 @@ cocos2d-x extensions designed to use benefits of c++11 standard
 
 CCImageLoadQueue
 ---------------
-Class to load images asynchroniosly.
+Class to load images asynchroniosly. (Uses std::function)
 ```c++
     const std::string pictureUrl = "your-url-here";
     CCImageLoadQueue::sharedQueue()->maybeAddImageToQueue(pictureUrl, "__cached_picture.jpg", [this] (bool success, const std::string &imageName) {
@@ -14,4 +14,15 @@ Class to load images asynchroniosly.
         if (sprite)
             addChild(sprite);
     });
+```
+
+CCForeach
+---------------
+Adaptor for range-based for. (Template class)
+```c++
+    // there is CCArray *childrenToAdd
+    for (auto node : CCForeach<CCNode>(childrenToAdd))
+    {
+        addChild(node);
+    }
 ```
