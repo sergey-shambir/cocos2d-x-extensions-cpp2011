@@ -57,18 +57,14 @@ public:
         CCHttpResponse *response = (CCHttpResponse *)vHttpResponse;
         if (response->isSucceed()) {
             if (std::vector<char> *data = response->getResponseData()) {
-                FILE *fout = ::fopen(m_cachePath.c_str(), "w");
-                if (fout == NULL) {
-                    CCLOGERROR("CCImageLoadQueue -- Cannot write to file '%s'", m_cachePath.c_str());
+                CCImage *image = new CCImage();
+                if (image->initWithImageData(data->data(), data->size())) {
+                    success = true;
+                    image->saveToFile(m_cachePath.c_str());
                 } else {
-                    CCLOGINFO("CCImageLoadQueue -- opened '%s', data size = %d", m_cachePath.c_str());
-                    size_t numwrite = ::fwrite(data->data(), sizeof(char), data->size(), fout);
-                    ::fclose(fout);
-                    if (numwrite != data->size())
-                        CCLOGERROR("CCImageLoadQueue -- Cannot write all data to '%s'", m_cachePath.c_str());
-                    else
-                        success = true;
+                    CCLOGERROR("CCImageLoadQueue -- Cannot init image with data, data size = %d", (int)data->size());
                 }
+                CC_SAFE_DELETE(image);
             } else {
                 CCLOGERROR("CCImageLoadQueue -- got empty data");
             }
