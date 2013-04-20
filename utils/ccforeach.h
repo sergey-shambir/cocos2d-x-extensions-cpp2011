@@ -23,6 +23,7 @@
 #define COCOS2DX_EXTENSIONS_CCFOREACH_H
 
 #include <cocos2d.h>
+#include <type_traits>
 #include "ExtensionMacros.h"
 
 NS_CC_EXT_BEGIN
@@ -82,6 +83,7 @@ public:
 
     CCForeach(CCArray *array)
     {
+        static_assert(std::is_base_of<CCObject, T>::value, "template parameter of CCForeach should be subclass of CCObject");
         if ((array) && (array)->data->num > 0)
         {
             m_start = array->data->arr;
