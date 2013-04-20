@@ -1,7 +1,7 @@
 cocos2d-x-extensions-cpp2011
 ============================
 
-cocos2d-x extensions designed to use benefits of c++11 standard
+Extensions for cocos2d-x designed to use benefits of c++11 standard. All code is under MIT license.
 
 CCImageLoadQueue
 ---------------
