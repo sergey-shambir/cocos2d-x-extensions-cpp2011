@@ -26,3 +26,53 @@ Adaptor for range-based for. (Template class)
         addChild(node);
     }
 ```
+
+Codegeneration for serialization
+---------------
+Code generator, based on clang-c API. It's very rough implementation, which can be improved in many terms.
+
+Example:
+```c++
+    struct SoldierRecord : ISerializableRecord
+    {
+        int health;
+        int fatigue;
+    };
+
+    struct NinjaRecord : public SoldierRecord
+    {
+        bool hasKatana;
+    };
+```
+
+Output (correct implementation file exists too, but it's too big to show):
+```c++
+    struct SoldierRecord : public ISerializableRecord
+    {
+        SoldierRecord();
+        void saveDataTo(CCDictionary *dict) const;
+        void loadDataFrom(CCDictionary *dict);
+        int getHealth() const;
+        int getFatigue() const;
+
+        void setHealth(int);
+        void setFatigue(int);
+
+    protected:
+        int health;
+        int fatigue;
+    };
+
+    struct NinjaRecord : public SoldierRecord
+    {
+        NinjaRecord();
+        void saveDataTo(CCDictionary *dict) const;
+        void loadDataFrom(CCDictionary *dict);
+        bool hasKatana() const;
+
+        void setHasKatana(bool);
+
+    protected:
+        bool m_hasKatana;
+    };
+```

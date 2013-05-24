@@ -1,14 +1,20 @@
 HEADERS += \
     $$PWD/utils/ccforeach.h \
     $$PWD/async/ccimageloadqueue.h \
-    ../../cocos2d-x-extensions-cpp2011/utils/ccdictionarybuilder.h \
-    ../../cocos2d-x-extensions-cpp2011/utils/ccarraybuilder.h
+    $$PWD/utils/ccdictionarybuilder.h \
+    $$PWD/utils/ccarraybuilder.h \
+    $$PWD/async/cccalllambda.h \
+    $$PWD/cocos2dx-cxx11.h \
+    $$PWD/async/cceasyhttp.h \
+    $$PWD/utils/ccbinarydata.h
 
 SOURCES += \
     $$PWD/async/ccimageloadqueue.cpp \
-    ../../cocos2d-x-extensions-cpp2011/utils/ccdictionarybuilder.cpp \
-    ../../cocos2d-x-extensions-cpp2011/utils/ccarraybuilder.cpp
+    $$PWD/utils/ccdictionarybuilder.cpp \
+    $$PWD/utils/ccarraybuilder.cpp \
+    $$PWD/async/cccalllambda.cpp \
+    $$PWD/async/cceasyhttp.cpp \
+    $$PWD/utils/ccbinarydata.cpp
 
-INCLUDEPATH *= $$PWD/async
-INCLUDEPATH *= $$PWD/utils
+include(cocos2d-x-extensions-cpp2011.prf)
 
