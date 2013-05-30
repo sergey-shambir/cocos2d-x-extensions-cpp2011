@@ -27,6 +27,18 @@ Adaptor for range-based for. (Template class)
     }
 ```
 
+CCCallLambda
+---------------
+CCAction that calls std::function<void()>, so it can be used with lambda
+
+```c++
+int count = 0;
+auto caller = CCCallLambda::create([&] () {
+    CCLOG("Lambda call #%d", ++count);
+});
+```
+
+
 Codegeneration for serialization
 ---------------
 Code generator, based on clang-c API. It's very rough implementation, which can be improved in many terms.

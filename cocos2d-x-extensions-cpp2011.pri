@@ -16,5 +16,8 @@ SOURCES += \
     $$PWD/async/cceasyhttp.cpp \
     $$PWD/utils/ccbinarydata.cpp
 
+OTHER_FILES += \
+    $$PWD/README.md
+
 include(cocos2d-x-extensions-cpp2011.prf)
 

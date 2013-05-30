@@ -3,6 +3,8 @@
 
 #include "cocos2d.h"
 #include "../ExtensionMacros.h"
+#include <functional>
+#include <type_traits>
 
 NS_CC_EXT_BEGIN
 
