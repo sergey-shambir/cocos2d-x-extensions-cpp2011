@@ -20,15 +20,15 @@
  */
 
 #include "ccimageloadqueue.h"
-#include "HttpRequest.h"
-#include "HttpClient.h"
-#include "HttpResponse.h"
+#include "network/HttpClient.h"
+#include <memory>
 
-USING_NS_CC;
-USING_NS_CC_EXT;
+namespace cocos2d {
 
-CCImageLoadQueue *g_instanceOfImageLoadQueue = 0;
-pthread_mutex_t CCImageLoadQueue::ms_mutex;
+using namespace cocos2d::extension;
+
+ImageLoadQueue *g_instanceOfImageLoadQueue = 0;
+pthread_mutex_t ImageLoadQueue::ms_mutex;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Private image loader
@@ -47,24 +47,23 @@ public:
         auto *request = new CCHttpRequest();
         request->setRequestType(CCHttpRequest::kHttpGet);
         request->setUrl(url.c_str());
-        request->setResponseCallback(loader, callfuncND_selector(PrivateImageLoader::responceCallback));
+        request->setResponseCallback(loader, httpresponse_selector(PrivateImageLoader::responceCallback));
         CCHttpClient::getInstance()->send(request);
     }
 
-    void responceCallback(CCNode *, void *vHttpResponse)
+    void responceCallback(CCHttpClient* client, CCHttpResponse* response)
     {
+        CC_UNUSED_PARAM(client);
         bool success = false;
-        CCHttpResponse *response = (CCHttpResponse *)vHttpResponse;
         if (response->isSucceed()) {
             if (std::vector<char> *data = response->getResponseData()) {
-                CCImage *image = new CCImage();
+                std::unique_ptr<CCImage> image(new CCImage());
                 if (image->initWithImageData(data->data(), data->size())) {
                     success = true;
                     image->saveToFile(m_cachePath.c_str());
                 } else {
                     CCLOGERROR("CCImageLoadQueue -- Cannot init image with data, data size = %d", (int)data->size());
                 }
-                CC_SAFE_DELETE(image);
             } else {
                 CCLOGERROR("CCImageLoadQueue -- got empty data");
             }
@@ -100,39 +99,40 @@ public:
 } // anonymous namespace
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-CCImageLoadQueue *CCImageLoadQueue::sharedQueue()
+ImageLoadQueue *ImageLoadQueue::getInstance()
 {
     if (g_instanceOfImageLoadQueue == 0) {
         PThreadLocker lock(&ms_mutex);
         if (g_instanceOfImageLoadQueue == 0) {
-            g_instanceOfImageLoadQueue = new CCImageLoadQueue();
+            g_instanceOfImageLoadQueue = new ImageLoadQueue();
             atexit(ccImageLoadQueueCleanup);
         }
     }
     return g_instanceOfImageLoadQueue;
 }
 
-void CCImageLoadQueue::addImageToQueue(const std::string &imageUrl, const std::string &imageName, const OnComplete &onComplete)
+void ImageLoadQueue::addImageToQueue(const std::string &imageUrl, const std::string &downloadName, const OnComplete &onComplete)
 {
-    PrivateImageLoader::createAndRun(imageUrl, m_cacheDir + imageName, [=] (bool success) {
-        onComplete(success, imageName);
+    PrivateImageLoader::createAndRun(imageUrl, CCFileUtils::sharedFileUtils()->fullPathForFilename(downloadName.c_str()), [=] (bool success) {
+        onComplete(success);
     });
 }
 
-void CCImageLoadQueue::maybeAddImageToQueue(const std::string &imageUrl, const std::string &imageName, const CCImageLoadQueue::OnComplete &onComplete)
+void ImageLoadQueue::maybeAddImageToQueue(const std::string &imageUrl, const std::string &downloadName, const ImageLoadQueue::OnComplete &onComplete)
 {
-    if (isCached(imageName))
-        onComplete(true, imageName);
+    if (isCached(downloadName))
+        onComplete(true);
     else
-        addImageToQueue(imageUrl, imageName, onComplete);
+        addImageToQueue(imageUrl, downloadName, onComplete);
 }
 
-bool CCImageLoadQueue::isCached(const std::string &imageName) const
+bool ImageLoadQueue::isCached(const std::string &downloadName) const
 {
-    return CCFileUtils::sharedFileUtils()->isFileExist(m_cacheDir + imageName);
+    return CCFileUtils::sharedFileUtils()->isFileExist(CCFileUtils::sharedFileUtils()->fullPathForFilename(downloadName.c_str()));
 }
 
-CCImageLoadQueue::CCImageLoadQueue()
-    : m_cacheDir(CCFileUtils::sharedFileUtils()->getWritablePath())
+ImageLoadQueue::ImageLoadQueue()
 {
 }
+
+} /* cocos2d */

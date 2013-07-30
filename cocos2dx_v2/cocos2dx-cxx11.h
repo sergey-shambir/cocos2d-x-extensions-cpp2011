@@ -8,5 +8,6 @@
 #include "utils/ccdictionarybuilder.h"
 #include "utils/ccforeach.h"
 #include "utils/ccbinarydata.h"
+#include "cloud/CCCloudStorage.h"
 
 #endif // COCOS2DXCXX11_H

@@ -27,23 +27,21 @@
 
 NS_CC_EXT_BEGIN
 
-class CCDictionaryBuilder
+class DictionaryBuilder
 {
-    CCDictionaryBuilder(const CCDictionaryBuilder &) = delete;
-    CCDictionaryBuilder &operator =(const CCDictionaryBuilder &) = delete;
+    DictionaryBuilder(const DictionaryBuilder &) = delete;
+    DictionaryBuilder &operator =(const DictionaryBuilder &) = delete;
 public:
-    CCDictionaryBuilder();
+    DictionaryBuilder();
     /// Constructs with existing dictionary or creates a new one, if nullptr given
-    CCDictionaryBuilder(CCDictionary *existingDict);
-    ~CCDictionaryBuilder();
+    DictionaryBuilder(CCDictionary *existingDict);
+    ~DictionaryBuilder();
 
     void reset();
     CCDictionary *getResult() const;
 
     /// Copies keys, skips key if object not exists
     void copyKeys(const std::vector<std::string> &keys, CCDictionary *other);
-    /// Copies keys and calls copy() for each object, skips key if object not exists
-    void copyKeysAndObjects(const std::vector<std::string> &keys, CCDictionary *other);
 
     /// Creates CCBool
     void setBool(bool value, const std::string &key);

@@ -23,26 +23,25 @@
 #define CCCALLLAMBDA_H
 
 #include "cocos2d.h"
-#include "../ExtensionMacros.h"
+#include "ExtensionMacros.h"
 #include <functional>
-#include <type_traits>
 
-NS_CC_EXT_BEGIN
+namespace cocos2d {
 
-class CCCallLambda : public cocos2d::CCActionInstant
+class CallLambda : public cocos2d::CCActionInstant
 {
 public:
-    static CCCallLambda *create(const std::function<void(void)> &callback);
-    CCFiniteTimeAction *reverse(void) override;
+    static CallLambda *create(const std::function<void(void)> &callback);
+    CCActionInstant *reverse(void) override;
+    CCObject* copyWithZone(CCZone *pZone) override;
 
 protected:
-    CCObject *copyWithZone(cocos2d::CCZone *pZone) override;
     void update(float time) override;
-    CCCallLambda(const std::function<void(void)> &callback);
+    CallLambda(const std::function<void(void)> &callback);
 
     std::function<void(void)> m_callback;
 };
 
-NS_CC_EXT_END
+} /* cocos2d */
 
 #endif // CCCALLLAMBDA_H

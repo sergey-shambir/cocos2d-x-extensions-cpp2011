@@ -1,4 +1,15 @@
-INCLUDEPATH *= $$PWD/async
-INCLUDEPATH *= $$PWD/utils
-INCLUDEPATH *= $$PWD
+
+isEmpty(COCOS2D_VERSION_MAJOR):COCOS2D_VERSION_MAJOR=3
+
+equals(COCOS2D_VERSION_MAJOR, 3) {
+    INCLUDEPATH *= $$PWD/cocos2dx_v3/async
+    INCLUDEPATH *= $$PWD/cocos2dx_v3/utils
+    INCLUDEPATH *= $$PWD/cocos2dx_v3
+}
+
+equals(COCOS2D_VERSION_MAJOR, 2) {
+    INCLUDEPATH *= $$PWD/cocos2dx_v2/async
+    INCLUDEPATH *= $$PWD/cocos2dx_v2/utils
+    INCLUDEPATH *= $$PWD/cocos2dx_v2
+}
 

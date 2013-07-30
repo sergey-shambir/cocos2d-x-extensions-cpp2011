@@ -23,13 +23,13 @@
 
 USING_NS_CC_EXT;
 
-CCArrayBuilder::CCArrayBuilder()
+ArrayBuilder::ArrayBuilder()
     : d(CCArray::create())
 {
     d->retain();
 }
 
-CCArrayBuilder::CCArrayBuilder(cocos2d::CCArray *existingArray)
+ArrayBuilder::ArrayBuilder(Array *existingArray)
     : d(existingArray)
 {
     if (!d)
@@ -37,61 +37,61 @@ CCArrayBuilder::CCArrayBuilder(cocos2d::CCArray *existingArray)
     d->retain();
 }
 
-CCArrayBuilder::~CCArrayBuilder()
+ArrayBuilder::~ArrayBuilder()
 {
     d->release();
 }
 
-void CCArrayBuilder::reset()
+void ArrayBuilder::reset()
 {
     d->release();
     d = CCArray::create();
     d->retain();
 }
 
-cocos2d::CCArray *CCArrayBuilder::getResult() const
+cocos2d::Array *ArrayBuilder::getResult() const
 {
     return d;
 }
 
-void CCArrayBuilder::addObjects(std::initializer_list<cocos2d::CCObject *> objects)
+void ArrayBuilder::addObjects(std::initializer_list<Object *> objects)
 {
     for (auto obj : objects)
         if (obj)
             d->addObject(obj);
 }
 
-void CCArrayBuilder::addBool(bool value)
+void ArrayBuilder::addBool(bool value)
 {
     auto obj = CCBool::create(value);
     d->addObject(obj);
 }
 
-void CCArrayBuilder::addInt(int value)
+void ArrayBuilder::addInt(int value)
 {
     auto obj = CCInteger::create(value);
     d->addObject(obj);
 }
 
-void CCArrayBuilder::addFloat(float value)
+void ArrayBuilder::addFloat(float value)
 {
     auto obj = CCFloat::create(value);
     d->addObject(obj);
 }
 
-void CCArrayBuilder::addDouble(double value)
+void ArrayBuilder::addDouble(double value)
 {
     auto obj = CCDouble::create(value);
     d->addObject(obj);
 }
 
-void CCArrayBuilder::addPoint(const cocos2d::CCPoint &value)
+void ArrayBuilder::addPoint(const Point &value)
 {
     auto obj = CCString::createWithFormat("{%f,%f}", value.x, value.y);
     d->addObject(obj);
 }
 
-void CCArrayBuilder::addRect(const cocos2d::CCRect &value)
+void ArrayBuilder::addRect(const Rect &value)
 {
     auto obj = CCString::createWithFormat("{%f,%f,%f,%f}",
                                           value.origin.x, value.origin.y,
@@ -99,7 +99,7 @@ void CCArrayBuilder::addRect(const cocos2d::CCRect &value)
     d->addObject(obj);
 }
 
-void CCArrayBuilder::addObject(cocos2d::CCObject *object)
+void ArrayBuilder::addObject(Object *object)
 {
     d->addObject(object);
 }

@@ -29,25 +29,25 @@
 NS_CC_EXT_BEGIN
 
 /**
- * Adaptor to use range-based for with CCArray.
+ * Adaptor to use range-based for with CCArray that contains known type.
  * @code
- * for (auto node : CCForeach<CCNode>(childrenToAdd))
+ * for (auto node : Foreach<CCNode>(childrenToAdd))
  * {
  *     addChild(node);
  * }
  * @endcode
  */
 template <class T>
-class CCForeach
+class Foreach
 {
-    CCObject **m_start;
-    CCObject **m_end;
+    Object **m_start;
+    Object **m_end;
 public:
     class iterator
     {
-        CCObject **pObj;
+        Object **pObj;
     public:
-        iterator(CCObject **obj) : pObj(obj) {}
+        iterator(Object **obj) : pObj(obj) {}
 
         bool operator != (const iterator &other) const
         {
@@ -81,9 +81,9 @@ public:
         }
     };
 
-    CCForeach(CCArray *array)
+    Foreach(Array *array)
     {
-        static_assert(std::is_base_of<CCObject, T>::value, "template parameter of CCForeach should be subclass of CCObject");
+        static_assert(std::is_base_of<Object, T>::value, "template parameter of Foreach should be subclass of CCObject");
         if ((array) && (array)->data->num > 0)
         {
             m_start = array->data->arr;

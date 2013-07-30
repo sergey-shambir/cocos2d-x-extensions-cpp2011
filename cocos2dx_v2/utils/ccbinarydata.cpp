@@ -23,9 +23,9 @@
 
 NS_CC_EXT_BEGIN
 
-CCBinaryData *CCBinaryData::createAsCopy(const std::string &data)
+BinaryData *BinaryData::createAsCopy(const std::string &data)
 {
-    if (CCBinaryData *d = new CCBinaryData())
+    if (BinaryData *d = new BinaryData())
     {
         auto placeholder = (char *)malloc(sizeof(char) * (data.size() + 1));
         ::memcpy(placeholder, data.c_str(), sizeof(char) * (data.size() + 1));
@@ -38,9 +38,9 @@ CCBinaryData *CCBinaryData::createAsCopy(const std::string &data)
     return NULL;
 }
 
-CCBinaryData *CCBinaryData::createAsCopy(const std::vector<char> &data)
+BinaryData *BinaryData::createAsCopy(const std::vector<char> &data)
 {
-    if (CCBinaryData *d = new CCBinaryData())
+    if (BinaryData *d = new BinaryData())
     {
         auto placeholder = (char *)malloc(sizeof(char) * (data.size() + 1));
         ::memcpy(placeholder, data.data(), sizeof(char) * data.size());
@@ -54,9 +54,9 @@ CCBinaryData *CCBinaryData::createAsCopy(const std::vector<char> &data)
     return NULL;
 }
 
-CCBinaryData *CCBinaryData::createAsCopy(const char *data, int size)
+BinaryData *BinaryData::createAsCopy(const char *data, int size)
 {
-    if (CCBinaryData *d = new CCBinaryData())
+    if (BinaryData *d = new BinaryData())
     {
         auto placeholder = (char *)malloc(sizeof(char) * (size + 1));
         ::memcpy(placeholder, data, sizeof(char) * size);
@@ -70,9 +70,9 @@ CCBinaryData *CCBinaryData::createAsCopy(const char *data, int size)
     return NULL;
 }
 
-CCBinaryData *CCBinaryData::createAsCopy(const char *nullTerminatedData)
+BinaryData *BinaryData::createAsCopy(const char *nullTerminatedData)
 {
-    if (CCBinaryData *d = new CCBinaryData())
+    if (BinaryData *d = new BinaryData())
     {
         auto size = ::strlen(nullTerminatedData);
         auto placeholder = (char *)malloc(sizeof(char) * (size + 1));
@@ -87,9 +87,9 @@ CCBinaryData *CCBinaryData::createAsCopy(const char *nullTerminatedData)
     return NULL;
 }
 
-CCBinaryData *CCBinaryData::createAsReference(const std::string &data)
+BinaryData *BinaryData::createAsReference(const std::string &data)
 {
-    if (CCBinaryData *d = new CCBinaryData())
+    if (BinaryData *d = new BinaryData())
     {
         d->m_data = data.c_str();
         d->m_size = data.size();
@@ -100,9 +100,9 @@ CCBinaryData *CCBinaryData::createAsReference(const std::string &data)
     return NULL;
 }
 
-CCBinaryData *CCBinaryData::createAsReference(const std::vector<char> &data)
+BinaryData *BinaryData::createAsReference(const std::vector<char> &data)
 {
-    if (CCBinaryData *d = new CCBinaryData())
+    if (BinaryData *d = new BinaryData())
     {
         d->m_data = data.data();
         d->m_size = data.size();
@@ -113,9 +113,9 @@ CCBinaryData *CCBinaryData::createAsReference(const std::vector<char> &data)
     return NULL;
 }
 
-CCBinaryData *CCBinaryData::createAsReference(const char *data, int size)
+BinaryData *BinaryData::createAsReference(const char *data, int size)
 {
-    if (CCBinaryData *d = new CCBinaryData())
+    if (BinaryData *d = new BinaryData())
     {
         d->m_data = data;
         d->m_size = size;
@@ -126,9 +126,9 @@ CCBinaryData *CCBinaryData::createAsReference(const char *data, int size)
     return NULL;
 }
 
-CCBinaryData *CCBinaryData::createAsReference(const char *nullTerminatedData)
+BinaryData *BinaryData::createAsReference(const char *nullTerminatedData)
 {
-    if (CCBinaryData *d = new CCBinaryData())
+    if (BinaryData *d = new BinaryData())
     {
         auto size = ::strlen(nullTerminatedData);
         d->m_data = nullTerminatedData;
@@ -140,36 +140,36 @@ CCBinaryData *CCBinaryData::createAsReference(const char *nullTerminatedData)
     return NULL;
 }
 
-CCBinaryData *CCBinaryData::canonicalData(CCBinaryData *source)
+BinaryData *BinaryData::canonicalData(BinaryData *source)
 {
     CCAssert(source, "CCBinaryData::canonicalData : 'source' cannot be null");
     if (source->m_isAllocated && source->m_isNullTerminated)
         return source;
-    return CCBinaryData::createAsCopy(source->data(), source->size());
+    return BinaryData::createAsCopy(source->data(), source->size());
 }
 
-const char *CCBinaryData::data() const
+const char *BinaryData::data() const
 {
     return m_data;
 }
 
-int CCBinaryData::size() const
+int BinaryData::size() const
 {
     return m_size;
 }
 
-bool CCBinaryData::isNullTerminated() const
+bool BinaryData::isNullTerminated() const
 {
     return m_isNullTerminated;
 }
 
-CCBinaryData::~CCBinaryData()
+BinaryData::~BinaryData()
 {
     if (m_isAllocated)
         std::free(const_cast<char *>(m_data));
 }
 
-CCBinaryData::CCBinaryData()
+BinaryData::BinaryData()
     : m_data(0)
     , m_size(0)
     , m_isNullTerminated(false)
@@ -177,7 +177,7 @@ CCBinaryData::CCBinaryData()
 {
 }
 
-void CCBinaryData::appendChunk(const char *data, int size)
+void BinaryData::appendChunk(const char *data, int size)
 {
     CCAssert(data, "CCBinaryData::appendChunk : 'data' cannot be null");
     CCAssert(m_isAllocated, "CCBinaryData::appendChunk : binary data is reference");

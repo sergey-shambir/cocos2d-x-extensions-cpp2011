@@ -19,49 +19,48 @@
  * IN THE SOFTWARE.
  */
 
-#include "cccalllambda.h"
+#ifndef CCARRAYBUILDER_H
+#define CCARRAYBUILDER_H
+
+#include <cocos2d.h>
+#include "ExtensionMacros.h"
 
 NS_CC_EXT_BEGIN
 
-CCCallLambda *CCCallLambda::create(const std::function<void (void)> &callback)
+class ArrayBuilder
 {
-    auto pRet = new CCCallLambda(callback);
-    pRet->autorelease();
-    return pRet;
-}
+    ArrayBuilder(const ArrayBuilder &) = delete;
+    ArrayBuilder &operator =(const ArrayBuilder &) = delete;
+public:
+    ArrayBuilder();
+    /// Constructs with existing array or creates a new one, if nullptr given
+    ArrayBuilder(CCArray *existingArray);
+    ~ArrayBuilder();
 
-cocos2d::CCObject *CCCallLambda::copyWithZone(cocos2d::CCZone *pZone)
-{
-    cocos2d::CCZone *pNewZone = NULL;
-    CCCallLambda *pRet = NULL;
+    void reset();
+    CCArray *getResult() const;
 
-    if (pZone && pZone->m_pCopyObject) {
-        pRet = (CCCallLambda*) (pZone->m_pCopyObject);
-    } else {
-        pRet = new CCCallLambda(m_callback);
-        pZone = pNewZone = new cocos2d::CCZone(pRet);
-    }
-    // copy member data
-    pRet->m_callback = m_callback;
-    CCFiniteTimeAction::copyWithZone(pZone);
-    CC_SAFE_DELETE(pNewZone);
-    return pRet;
-}
+    void addObjects(std::initializer_list<CCObject *> objects);
 
-void CCCallLambda::update(float time)
-{
-    CC_UNUSED_PARAM(time);
-    m_callback();
-}
+    /// Creates CCBool
+    void addBool(bool value);
+    /// Creates CCInteger
+    void addInt(int value);
+    /// Creates CCFloat
+    void addFloat(float value);
+    /// Creates CCDouble
+    void addDouble(double value);
+    /// Creates CCString
+    void addPoint(const CCPoint &value);
+    /// Creates CCString
+    void addRect(const CCRect &value);
+    /// Calls \a CCArray::addObject
+    void addObject(CCObject *object);
 
-CCFiniteTimeAction *CCCallLambda::reverse()
-{
-    return static_cast<CCCallLambda *>(copy()->autorelease());
-}
-
-CCCallLambda::CCCallLambda(const std::function<void (void)> &callback)
-    : m_callback(callback)
-{
-}
+private:
+    CCArray *d;
+};
 
 NS_CC_EXT_END
+
+#endif // CCARRAYBUILDER_H

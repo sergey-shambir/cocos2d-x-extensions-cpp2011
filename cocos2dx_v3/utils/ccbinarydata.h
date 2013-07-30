@@ -33,30 +33,30 @@ NS_CC_EXT_BEGIN
  * using CCBinaryData, use \a canonicalData() to ensure that you can use
  * BinaryData instance as normal string and pass without limitations.
  */
-class CCBinaryData : public CCObject
+class BinaryData : public Object
 {
 public:
     /// @name createAsCopy
     /// @brief This methods family allocates memory for copy of passed data.
     /// @{
-    static CCBinaryData *createAsCopy(const std::string &data);
-    static CCBinaryData *createAsCopy(const std::vector<char> &data);
-    static CCBinaryData *createAsCopy(const char *data, int size);
-    static CCBinaryData *createAsCopy(const char *nullTerminatedData);
+    static BinaryData *createAsCopy(const std::string &data);
+    static BinaryData *createAsCopy(const std::vector<char> &data);
+    static BinaryData *createAsCopy(const char *data, int size);
+    static BinaryData *createAsCopy(const char *nullTerminatedData);
     /// @}
 
     /// @name createAsReference
     /// @brief This methods family uses existing buffer, so app will crash
     /// if you release referenced memory while using CCBinaryData instance.
     /// @{
-    static CCBinaryData *createAsReference(const std::string &data);
-    static CCBinaryData *createAsReference(const std::vector<char> &data);
-    static CCBinaryData *createAsReference(const char *data, int size);
-    static CCBinaryData *createAsReference(const char *nullTerminatedData);
+    static BinaryData *createAsReference(const std::string &data);
+    static BinaryData *createAsReference(const std::vector<char> &data);
+    static BinaryData *createAsReference(const char *data, int size);
+    static BinaryData *createAsReference(const char *nullTerminatedData);
     /// @}
 
     /// @return Null-terminated, allocated data - either \a source or its copy.
-    static CCBinaryData *canonicalData(CCBinaryData *source);
+    static BinaryData *canonicalData(BinaryData *source);
 
     /// @name Properties
     /// @{
@@ -71,13 +71,13 @@ public:
     void appendChunk(const char *data, int size);
     /// @}
 
-    ~CCBinaryData();
+    ~BinaryData();
 
 protected:
     // TODO: copyWithZone
 
 private:
-    CCBinaryData();
+    BinaryData();
 
     const char *m_data;
     int m_size;

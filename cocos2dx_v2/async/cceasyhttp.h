@@ -25,7 +25,7 @@
 #include <functional>
 #include <vector>
 #include <string>
-#include "HttpResponse.h"
+#include "network/HttpResponse.h"
 
 NS_CC_EXT_BEGIN
 
@@ -53,7 +53,7 @@ NS_CC_EXT_BEGIN
  * @endcode
  *
  */
-class CCEasyHttp
+class EasyHttp
 {
 public:
     typedef std::function<void (CCHttpResponse *response)> OnRequestComplete;
@@ -65,7 +65,7 @@ public:
     static void requestGET(const std::string &url,
                            const std::vector<std::string> &headers,
                            OnRequestComplete onComplete);
-    // TODO: not finished
+    // TODO: interface not finished, add POST data
     static void requestPOST(const std::string &url,
                             const std::vector<std::string> &headers,
                             OnRequestComplete onComplete);
@@ -81,7 +81,7 @@ public:
 
 private:
     /// Not instanceable
-    CCEasyHttp();
+    EasyHttp();
 };
 
 NS_CC_EXT_END

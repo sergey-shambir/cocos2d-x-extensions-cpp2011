@@ -19,48 +19,50 @@
  * IN THE SOFTWARE.
  */
 
-#ifndef CCARRAYBUILDER_H
-#define CCARRAYBUILDER_H
+#ifndef CCDICTIONARYBUILDER_H
+#define CCDICTIONARYBUILDER_H
 
 #include <cocos2d.h>
 #include "ExtensionMacros.h"
 
 NS_CC_EXT_BEGIN
 
-class CCArrayBuilder
+class DictionaryBuilder
 {
-    CCArrayBuilder(const CCArrayBuilder &) = delete;
-    CCArrayBuilder &operator =(const CCArrayBuilder &) = delete;
+    DictionaryBuilder(const DictionaryBuilder &) = delete;
+    DictionaryBuilder &operator =(const DictionaryBuilder &) = delete;
 public:
-    CCArrayBuilder();
-    /// Constructs with existing array or creates a new one, if nullptr given
-    CCArrayBuilder(CCArray *existingArray);
-    ~CCArrayBuilder();
+    DictionaryBuilder();
+    /// Constructs with existing dictionary or creates a new one, if nullptr given
+    DictionaryBuilder(Dictionary *existingDict);
+    ~DictionaryBuilder();
 
     void reset();
-    CCArray *getResult() const;
+    Dictionary *getResult() const;
 
-    void addObjects(std::initializer_list<CCObject *> objects);
+    /// Copies keys, skips key if object not exists
+    void copyKeys(const std::vector<std::string> &keys, Dictionary *other);
 
     /// Creates CCBool
-    void addBool(bool value);
+    void setBool(bool value, const std::string &key);
     /// Creates CCInteger
-    void addInt(int value);
+    void setInt(int value, const std::string &key);
     /// Creates CCFloat
-    void addFloat(float value);
+    void setFloat(float value, const std::string &key);
     /// Creates CCDouble
-    void addDouble(double value);
+    void setDouble(double value, const std::string &key);
     /// Creates CCString
-    void addPoint(const CCPoint &value);
+    void setPoint(const Point &value, const std::string &key);
     /// Creates CCString
-    void addRect(const CCRect &value);
-    /// Calls \a CCArray::addObject
-    void addObject(CCObject *object);
+    void setRect(const Rect &value, const std::string &key);
+
+    /// Calls \a CCDictionary::setObject
+    void setObject(Object *object, const std::string &key);
 
 private:
-    CCArray *d;
+    Dictionary *d;
 };
 
 NS_CC_EXT_END
 
-#endif // CCARRAYBUILDER_H
+#endif // CCDICTIONARYBUILDER_H

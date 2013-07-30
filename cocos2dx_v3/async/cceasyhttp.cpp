@@ -20,73 +20,73 @@
  */
 
 #include "cceasyhttp.h"
-#include "HttpRequest.h"
-#include "HttpClient.h"
+#include "network/HttpClient.h"
 
 NS_CC_EXT_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Private helper
 namespace {
-class PrivateHelper : public CCObject
+class PrivateHelper : public Object
 {
-    CCEasyHttp::OnRequestComplete m_onComplete;
+    EasyHttp::OnRequestComplete m_onComplete;
     std::string m_cachePath;
     std::vector<std::string> m_headers;
 public:
     static void run(const std::string &url,
                     const std::vector<std::string> &headers,
-                    CCHttpRequest::HttpRequestType requestType,
-                    const CCEasyHttp::OnRequestComplete &onComplete)
+                    HttpRequest::Type requestType,
+                    const EasyHttp::OnRequestComplete &onComplete)
     {
         auto *loader = new PrivateHelper();
         loader->m_onComplete = onComplete;
 
-        auto *request = new CCHttpRequest();
-        request->setRequestType(CCHttpRequest::kHttpGet);
+        auto *request = new HttpRequest();
+        request->setRequestType(HttpRequest::Type::GET);
         request->setUrl(url.c_str());
-        request->setResponseCallback(loader, callfuncND_selector(PrivateHelper::responceCallback));
+        request->setResponseCallback(loader, httpresponse_selector(PrivateHelper::responceCallback));
         request->setHeaders(headers);
         request->setRequestType(requestType);
-        CCHttpClient::getInstance()->send(request);
+        HttpClient::getInstance()->send(request);
     }
 
-    void responceCallback(CCNode *, void *vHttpResponse)
+    void responceCallback(HttpClient* client, HttpResponse* response)
     {
-        m_onComplete((CCHttpResponse *)vHttpResponse);
+        CC_UNUSED_PARAM(client);
+        m_onComplete(response);
         delete this;
     }
 };
 } // anonymous namespace
 
-CCEasyHttp::CCEasyHttp()
+EasyHttp::EasyHttp()
 {
 }
 
-void CCEasyHttp::requestGET(const std::string &url,
-                            CCEasyHttp::OnRequestComplete onComplete)
+void EasyHttp::requestGET(const std::string &url,
+                          EasyHttp::OnRequestComplete onComplete)
 {
-    PrivateHelper::run(url, std::vector<std::string>(), CCHttpRequest::kHttpGet, onComplete);
+    PrivateHelper::run(url, std::vector<std::string>(), HttpRequest::Type::GET, onComplete);
 }
 
-void CCEasyHttp::requestGET(const std::string &url,
-                            const std::vector<std::string> &headers,
-                            CCEasyHttp::OnRequestComplete onComplete)
+void EasyHttp::requestGET(const std::string &url,
+                          const std::vector<std::string> &headers,
+                          EasyHttp::OnRequestComplete onComplete)
 {
-    PrivateHelper::run(url, headers, CCHttpRequest::kHttpGet, onComplete);
+    PrivateHelper::run(url, headers, HttpRequest::Type::GET, onComplete);
 }
 
-void CCEasyHttp::requestPOST(const std::string &url,
-                             const std::vector<std::string> &headers,
-                             CCEasyHttp::OnRequestComplete onComplete)
+void EasyHttp::requestPOST(const std::string &url,
+                           const std::vector<std::string> &headers,
+                           EasyHttp::OnRequestComplete onComplete)
 {
-    PrivateHelper::run(url, headers, CCHttpRequest::kHttpPost, onComplete);
+    PrivateHelper::run(url, headers, HttpRequest::Type::POST, onComplete);
 }
 
-CCEasyHttp::OnRequestComplete CCEasyHttp::actionSaveFile(const std::string &downloadPath,
-                                                         const std::function<void (bool)> &callback)
+EasyHttp::OnRequestComplete EasyHttp::actionSaveFile(const std::string &downloadPath,
+                                                     const std::function<void (bool)> &callback)
 {
-    return [=] (CCHttpResponse *response) {
+    return [=] (HttpResponse *response) {
         bool success = false;
         if (response->isSucceed()) {
             if (std::vector<char> *data = response->getResponseData()) {
@@ -113,13 +113,13 @@ CCEasyHttp::OnRequestComplete CCEasyHttp::actionSaveFile(const std::string &down
     };
 }
 
-CCEasyHttp::OnRequestComplete CCEasyHttp::actionSaveImage(const std::string &downloadPath, const std::function<void (bool)> &callback)
+EasyHttp::OnRequestComplete EasyHttp::actionSaveImage(const std::string &downloadPath, const std::function<void (bool)> &callback)
 {
-    return [=] (CCHttpResponse *response) {
+    return [=] (HttpResponse *response) {
         bool success = false;
         if (response->isSucceed()) {
             if (std::vector<char> *data = response->getResponseData()) {
-                CCImage *image = new CCImage();
+                std::unique_ptr<Image> image(new Image());
                 if (image->initWithImageData((void *)data->data(), data->size())) {
                     if (image->saveToFile(downloadPath.c_str())) {
                         success = true;
@@ -129,7 +129,6 @@ CCEasyHttp::OnRequestComplete CCEasyHttp::actionSaveImage(const std::string &dow
                 } else {
                     CCLOGWARN("HTTP request returned no valid image data, data size = %d", (int)data->size());
                 }
-                CC_SAFE_DELETE(image);
             } else {
                 CCLOGWARN("HTTP request returned no data");
             }
