@@ -11,7 +11,8 @@ equals(COCOS2D_VERSION_MAJOR, 3) {
         $$PWD/cocos2dx_v3/utils/ccforeach.h \
         $$PWD/cocos2dx_v3/utils/ccdictionarybuilder.h \
         $$PWD/cocos2dx_v3/utils/ccarraybuilder.h \
-        $$PWD/cocos2dx_v3/utils/ccbinarydata.h
+        $$PWD/cocos2dx_v3/utils/ccbinarydata.h \
+        $$PWD/cocos2dx_v3/utils/ccstrongptr.h
 
     SOURCES += \
         $$PWD/cocos2dx_v3/async/ccimageloadqueue.cpp \
